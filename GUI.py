@@ -143,6 +143,47 @@ def button8_click():
     except:
         show_error()
 
+def button9_click():
+    try:
+        msg = entry1.get()
+        with open("msg.txt", "w") as f:
+            f.write(msg)
+    except:
+        show_error()
+
+def button10_click():
+    try:
+        with open("params.txt", "r") as f:
+            par = f.read()
+        entry0.delete(0, tk.END)
+        entry0.insert(0, par)
+    except:
+        show_error()
+
+def button11_click():
+    try:
+        with open("keys.txt", "r") as f:
+            keys = f.read().splitlines()
+        k = int(keys[0])
+        k_i = int(keys[1])
+        glob.person.key = k
+        glob.person.key_inv = k_i
+        entry2.delete(0, tk.END)
+        entry2.insert(0, k)
+        entry3.delete(0, tk.END)
+        entry3.insert(0, k_i)
+    except:
+        show_error()
+
+def button12_click():
+    try:
+        with open("msg.txt", "r") as f:
+            msg = f.read()
+        entry1.delete(0, tk.END)
+        entry1.insert(0, msg)
+    except:
+        show_error()
+
 glob = GUI_Participant()
 
 window = tk.Tk()
@@ -152,9 +193,9 @@ frame_buttons = tk.Frame(window)
 frame_buttons.pack(side = tk.TOP, fill = tk.X)
 
 buttons = []
-but_names = ["help", "init participant", "generate message", "generate keys", "start as Alice", "start as Bob", "export parameters", "export keys", "export log"]
-but_com = [button0_click, button1_click, button2_click, button3_click, button4_click, button5_click, button6_click, button7_click, button8_click]
-for i in range(9):
+but_names = ["help", "init", "gen msg", "gen keys", "Alice", "Bob", "exp params", "exp keys", "exp log", "exp msg", "imp params", "imp keys", "imp msg"]
+but_com = [button0_click, button1_click, button2_click, button3_click, button4_click, button5_click, button6_click, button7_click, button8_click, button9_click, button10_click, button11_click, button12_click]
+for i in range(13):
     buttons.append(tk.Button(frame_buttons, text = but_names[i], command = but_com[i]))
 
 for button in buttons:
