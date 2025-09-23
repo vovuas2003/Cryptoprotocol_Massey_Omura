@@ -30,8 +30,8 @@ def run_CLI():
         serv_ip, serv_port, cli_ip, cli_port = get_net_set_from_database(database, name)
     except:
         return
+    Whoami.init_name_keys_and_log(name)
     Whoami.init_sockets(serv_ip, serv_port, cli_ip, cli_port)
-    Whoami.init_name_and_log(name)
     Whoami.run_server()
     try:
         while True:
@@ -136,7 +136,6 @@ class Participant():
             raise
         self.poly_to_check_gcd = galois.Poly([1 for _ in range(self.n)], field = self.field)
         self.N_1 = self.p**self.n - 1
-        self._generate_key()
 
         self.server_socket = None
         self.client_socket = None
@@ -166,8 +165,19 @@ class Participant():
         return self.field(message) ** self.key
     def decrypt(self, message):
         return self.field(message) ** self.key_inv
-    def init_name_and_log(self, name):
+    def init_name_keys_and_log(self, name):
         self.name = name
+        try:
+            with open(self.name + "_keys.txt", "r") as f:
+                keys = f.read().splitlines()
+            self.key = int(keys[0])
+            self.key_inv = int(keys[1])
+            print("Keys was imported from " + self.name + "_keys.txt")
+        except:
+            self._generate_key()
+            with open(self.name + "_keys.txt", "w") as f:
+                f.write(str(self.key) + "\n" + str(self.key_inv))
+            print("Fresh keygen, export to " + self.name + "_keys.txt")
         if self.logging:
             with self.log_lock:
                 with open(self.name + "_log.txt", "w") as f:
